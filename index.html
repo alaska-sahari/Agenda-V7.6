@@ -196,26 +196,25 @@ button {
 }
 
 
-.strawberry-dot  {
-  position:absolute;
+.red-auto {
+  position: absolute;
   top: 18px;
   right: 40px;
-  width:15px;
-  height:15px;
-  background:red;
-  border-radius:50%;
+  width: 15px;
+  height: 15px;
+  background: red;
+  border-radius: 50%;
 }
-.strawberry-dott  {
-  position:absolute;
+.red-custom {
+  position: absolute;
   top: 18px;
   right: 40px;
-  width:15px;
-  height:15px;
+  width: 15px;
+  height: 15px;
   background: orange;
-  border-radius:50%;
+  border-radius: 50%;
+  box-shadow: 0 0 10px yellow;
 }
-
-
 #total {
   text-align:center;
   font-weight:bold;
@@ -814,7 +813,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.7.1</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.8</p>
 </footer>
 
 
@@ -1131,7 +1130,10 @@ const isFriday = dateObj.getDay() === 5; // الجمعة = 5
     }
 
     const hasNote=data["note_"+key];
-    const hasStraw=data["strawberry_"+key];
+    
+    const isRed = data["strawberry_" + key];
+    const isAutoRed = data["strawberryAuto_" + key] === true;
+    
     const hasClock = data["clock_" + key];
     const hasStar = data["star_" + key];
 
@@ -1146,12 +1148,9 @@ const isFriday = dateObj.getDay() === 5; // الجمعة = 5
       ${hasNote?'<span class="note-indicator">📝</span>':''}
    
    
-  ${hasStraw ? '<span class="strawberry-dot"></span>' : ''}
-  
-  ${data["strawberryAmount_" + key] &&
-  !data["strawberryAuto_" + key] ? `
-  <span class="strawberry-dott"></span>
-  ` : ''}
+${isRed ? `
+<span class="${isAutoRed ? 'red-auto' : 'red-custom'}"></span>
+` : ''}
    
    
     
