@@ -814,7 +814,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.6</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.7</p>
 </footer>
 
 
@@ -1241,14 +1241,15 @@ function openMenu(target, key) {
 
     // ✔ toggle important (●)
     if (icon === "●") {
-      if (data["strawberry_" + key]) {
-        delete data["strawberry_" + key];
-        delete data["strawberryAmount_" + key];
-        delete data["strawberryAuto_" + key];
-      } else {
+    
+      if (!data["strawberry_" + key]) {
         data["strawberry_" + key] = true;
         data["strawberryAmount_" + key] = getRedAmount();
         data["strawberryAuto_" + key] = true;
+      } else {
+        delete data["strawberry_" + key];
+        delete data["strawberryAmount_" + key];
+        delete data["strawberryAuto_" + key];
       }
     }
 
@@ -1356,10 +1357,10 @@ if (icon === "◯") {
           // long press on ● → edit amount
           if (icon === "●") {
             const old = data["strawberryAmount_" + key] ?? "";
-            const v = prompt("Montant personnalisé ?", old);
-
+            const v = prompt("المبلغ الخاص:", old);
+          
             if (v === null) return;
-
+          
             if (v.trim() === "") {
               data["strawberryAmount_" + key] = getRedAmount();
               data["strawberryAuto_" + key] = true;
@@ -1367,7 +1368,7 @@ if (icon === "◯") {
               data["strawberryAmount_" + key] = Number(v);
               delete data["strawberryAuto_" + key];
             }
-
+          
             save();
             closeMenu();
           }
