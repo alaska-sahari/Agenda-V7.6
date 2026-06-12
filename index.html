@@ -372,6 +372,21 @@ font-size: 35px;
 #installBtn{
   display:none; position:fixed; top:15px; left:25px; z-index:9999;border: 1px solid darkred;padding: 40px;width: 200px;text-align: center;background: dimgrey; border-radius: 25px;color: white;
 }
+
+
+#updateBadge {
+  display: none;
+  position: fixed;
+  top: 18px;
+  right: 30px;
+  width: 15px;
+  height: 15px;
+  background: red;
+  border-radius: 50%;
+  z-index: 10000;
+}
+
+
 #checkUpdate{
   position:fixed; top:15px; right:25px; z-index:9999;
 }
@@ -548,7 +563,7 @@ font-size: 32px;
 </button>
   
   <button id="checkUpdate" class="darkk" onclick="checkUpdate()">🔄</button>
-
+<span id="updateBadge"></span>
   
   
 <div class="calendar">
@@ -799,7 +814,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.4</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.6</p>
 </footer>
 
 
@@ -2413,8 +2428,10 @@ async function checkUpdate() {
   await reg.update();
 
   if (reg.waiting) {
+    document.getElementById("updateBadge").style.display = "block";
     showUpdateAvailable(reg.waiting);
   } else {
+    document.getElementById("updateBadge").style.display = "none";
     alert("التطبيق محدث بالفعل");
   }
 }
@@ -2423,6 +2440,9 @@ async function checkUpdate() {
 
 
 function showUpdateAvailable(worker) {
+
+
+document.getElementById("updateBadge").style.display = "block";
 
   if (document.getElementById("updatePopup")) return;
 
@@ -2465,6 +2485,7 @@ function showUpdateAvailable(worker) {
   document.body.appendChild(box);
 
   document.getElementById("acceptUpdate").onclick = () => {
+    document.getElementById("updateBadge").style.display = "none";
     worker.postMessage({ type: "skipWaiting" });
     box.remove();
   };
