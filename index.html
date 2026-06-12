@@ -388,7 +388,7 @@ font-size: 35px;
 
 
 #checkUpdate{
-  position:fixed; top:15px; right:25px; z-index:9999;
+  position:fixed; top:30px; left:25px; z-index:9999;
 }
 .Auto,.Custom,.Total{
   color: rgb(109, 109, 109);
@@ -562,7 +562,7 @@ font-size: 32px;
 📲 Install
 </button>
   
-  <button id="checkUpdate" class="darkk" onclick="checkUpdate()">🔄</button>
+  <button id="checkUpdate" class="darkk" onclick="checkUpdate()">.</button>
 <span id="updateBadge"></span>
   
   
@@ -932,9 +932,14 @@ let redTotalVal = 0;
   if (date >= start && date <= end) {
     const auto = data["auto_" + key];
   
-    totalVal +=
-      data["custom_" + key] ??
-      (auto !== undefined ? Number(auto) : 0);
+    const customVal = data["custom_" + key];
+    const autoVal = data["auto_" + key];
+    
+    if (customVal !== undefined) {
+      totalVal += Number(customVal) || 0;
+    } else if (autoVal !== undefined) {
+      totalVal += Number(autoVal);
+    }
   }
   }
 
@@ -1112,7 +1117,7 @@ const isFriday = dateObj.getDay() === 5; // الجمعة = 5
     
     
  if (state === "◯") {
-   const hasCustom = data["custom_" + key];
+   const hasCustom = Number(data["custom_" + key]) > 0;
  
    if (hasCustom) {
      div.classList.add("custom-success");
@@ -1308,6 +1313,8 @@ if (icon === "$") {
    
 
     save();
+    renderCalendar();
+    updateTotal();
     closeMenu();
   }
 
@@ -1347,6 +1354,7 @@ if (icon === "◯") {
 
   if (v.trim() === "") {
     delete data["custom_" + key];
+    data["auto_" + key] = Number(getAmount());
   } else {
     data["custom_" + key] = Number(v);
   }
