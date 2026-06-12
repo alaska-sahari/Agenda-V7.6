@@ -799,7 +799,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.2</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.3</p>
 </footer>
 
 
@@ -2234,7 +2234,10 @@ navigator.serviceWorker.ready.then(reg => {
 
 
 navigator.serviceWorker.addEventListener("controllerchange", () => {
-  location.reload();
+  const bar = document.getElementById("updateBar");
+  if (bar) bar.remove();
+
+  location.reload(); // إعادة تحميل بعد التحديث فقط
 });
 
 
@@ -2422,53 +2425,48 @@ async function checkUpdate() {
 
 
 function showUpdateAvailable(worker) {
-  const SKIP_KEY = "update_snoozed_until";
 
-  // إذا المستخدم اختار "لاحقاً" ومازال الوقت لم ينتهِ → لا نعرض النافذة
-  const snoozedUntil = localStorage.getItem(SKIP_KEY);
-  if (snoozedUntil && Date.now() < Number(snoozedUntil)) {
-    return;
-  }
+  // منع التكرار
+  if (document.getElementById("updateBar")) return;
 
-  const box = document.createElement("div");
+  const bar = document.createElement("div");
+  bar.id = "updateBar";
 
-  box.style = `
+  bar.style = `
     position:fixed;
-    top:20px;
-    left:20px;
-    background:#333;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#222;
     color:white;
-    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 20px;
     z-index:99999;
-    border-radius:10px;
-    font-size:20px;
+    font-size:18px;
+    box-shadow:0 -2px 10px rgba(0,0,0,0.4);
   `;
 
-  box.innerHTML = `
-    <div style="margin-bottom:10px;">🔄 يوجد تحديث جديد للتطبيق</div>
+  bar.innerHTML = `
+    <div>🔄 تحديث جديد متاح</div>
 
-    <button id="acceptUpdate" style="margin-right:10px;">
-      موافقة
-    </button>
-
-    <button id="rejectUpdate">
-      لاحقاً
-    </button>
+    <div>
+      <button id="updateBtn" style="margin-right:10px;">تحديث الآن</button>
+      <button id="laterBtn">إغلاق</button>
+    </div>
   `;
 
-  document.body.appendChild(box);
+  document.body.appendChild(bar);
 
-  // ✅ موافقة = تحديث مباشر
-  document.getElementById("acceptUpdate").onclick = () => {
+  // 🔄 تحديث فوري
+  document.getElementById("updateBtn").onclick = () => {
     worker.postMessage({ type: "skipWaiting" });
-    location.reload();
   };
 
-  // ⏳ لاحقاً = إخفاء مؤقت ثم إعادة الظهور بعد مدة
-  document.getElementById("rejectUpdate").onclick = () => {
-    const oneDay = 24 * 60 * 60 * 1000; // 24 ساعة
-    localStorage.setItem(SKIP_KEY, Date.now() + oneDay);
-    box.remove();
+  // ❌ إخفاء فقط (بدون تعطيل التحديث)
+  document.getElementById("laterBtn").onclick = () => {
+    bar.remove();
   };
 }
 
