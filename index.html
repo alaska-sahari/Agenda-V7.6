@@ -799,7 +799,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.3</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.4</p>
 </footer>
 
 
@@ -2234,10 +2234,7 @@ navigator.serviceWorker.ready.then(reg => {
 
 
 navigator.serviceWorker.addEventListener("controllerchange", () => {
-  const bar = document.getElementById("updateBar");
-  if (bar) bar.remove();
-
-  location.reload(); // إعادة تحميل بعد التحديث فقط
+  location.reload();
 });
 
 
@@ -2403,6 +2400,7 @@ moree.addEventListener('click', () => {
 
 
 async function checkUpdate() {
+
   if (!('serviceWorker' in navigator)) return;
 
   const reg = await navigator.serviceWorker.getRegistration();
@@ -2426,47 +2424,53 @@ async function checkUpdate() {
 
 function showUpdateAvailable(worker) {
 
-  // منع التكرار
-  if (document.getElementById("updateBar")) return;
+  if (document.getElementById("updatePopup")) return;
 
-  const bar = document.createElement("div");
-  bar.id = "updateBar";
+  const box = document.createElement("div");
+  box.id = "updatePopup";
 
-  bar.style = `
+  box.style = `
     position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:#222;
-    color:white;
+    inset:0;
+    background:rgba(0,0,0,.5);
     display:flex;
-    justify-content:space-between;
+    justify-content:center;
     align-items:center;
-    padding:15px 20px;
-    z-index:99999;
-    font-size:18px;
-    box-shadow:0 -2px 10px rgba(0,0,0,0.4);
+    z-index:999999;
   `;
 
-  bar.innerHTML = `
-    <div>🔄 تحديث جديد متاح</div>
+  box.innerHTML = `
+    <div style="
+      background:#222;
+      color:white;
+      padding:25px;
+      border-radius:15px;
+      text-align:center;
+      width:320px;
+    ">
+      <h3>🔄 تحديث جديد متاح</h3>
 
-    <div>
-      <button id="updateBtn" style="margin-right:10px;">تحديث الآن</button>
-      <button id="laterBtn">إغلاق</button>
+      <button id="acceptUpdate"
+        style="margin:10px;">
+        تحديث الآن
+      </button>
+
+      <button id="laterUpdate"
+        style="margin:10px;">
+        لاحقاً
+      </button>
     </div>
   `;
 
-  document.body.appendChild(bar);
+  document.body.appendChild(box);
 
-  // 🔄 تحديث فوري
-  document.getElementById("updateBtn").onclick = () => {
+  document.getElementById("acceptUpdate").onclick = () => {
     worker.postMessage({ type: "skipWaiting" });
+    box.remove();
   };
 
-  // ❌ إخفاء فقط (بدون تعطيل التحديث)
-  document.getElementById("laterBtn").onclick = () => {
-    bar.remove();
+  document.getElementById("laterUpdate").onclick = () => {
+    box.remove();
   };
 }
 
