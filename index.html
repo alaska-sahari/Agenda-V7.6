@@ -562,7 +562,7 @@ font-size: 32px;
 📲 Install
 </button>
   
-  <button id="checkUpdate" class="darkk" onclick="checkUpdate()">.</button>
+  <button id="checkUpdate" class="darkk" onclick="checkUpdate()">⟳</button>
 <span id="updateBadge"></span>
   
   
@@ -814,7 +814,7 @@ font-size: 32px;
 
 
 <footer style="font-size: 16px; color: darkgray; position: fixed; bottom: 5px;right: 30px;">
-  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.7.0</p>
+  <p>calendrier KML | By B.N @treize mai 2026__18po.V7.6.7.1</p>
 </footer>
 
 
@@ -935,7 +935,7 @@ let redTotalVal = 0;
     const customVal = data["custom_" + key];
     const autoVal = data["auto_" + key];
     
-    if (customVal !== undefined) {
+    if (customVal !== undefined && customVal !== "") {
       totalVal += Number(customVal) || 0;
     } else if (autoVal !== undefined) {
       totalVal += Number(autoVal);
@@ -1231,6 +1231,7 @@ function openMenu(target, key) {
    
        data[key] = "◯";
        data["auto_" + key] = Number(getAmount());
+       delete data["custom_" + key]; // 🔥 مهم
    
      }
    }
@@ -1312,9 +1313,9 @@ if (icon === "$") {
 
    
 
-    save();
-    renderCalendar();
-    updateTotal();
+saveData(data);
+updateTotal();   // 🔥 أضف هذا
+renderCalendar();
     closeMenu();
   }
 
@@ -1357,6 +1358,7 @@ if (icon === "◯") {
     data["auto_" + key] = Number(getAmount());
   } else {
     data["custom_" + key] = Number(v);
+    delete data["auto_" + key]; // 🔥 مهم جدًا
   }
 
   save();

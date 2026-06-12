@@ -1,4 +1,4 @@
-const CACHE_VERSION = "kml-v7.6.7.0";
+const CACHE_VERSION = "kml-v7.6.7.1";
 const CACHE_NAME = `kml-cache-${CACHE_VERSION}`;
 
 const FILES = [
